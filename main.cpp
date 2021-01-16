@@ -46,19 +46,24 @@ int main()
 		}
 	}
 
+	cout << "Introduceti una din urmatoarele comenzi:"<<endl<< 
+		"CREATE TABLE comenzi ( nume , text , 30 , NULL , varsta , integer , 10 , NULL ) \n" <<
+		"DISPLAY TABLE comenzi " << endl;
+
 	int var_exit = 0;
-	while (var_exit == 0)
+	while (var_exit != 1)
 	{
 		string sir;
-		cout << "Introduceti comanda:" << endl;
+		cout << "\n Introduceti comanda: (sau EXIT pt a iesi)" << endl;
 		cin >> ws;
 		getline(cin, sir);
 		Comenzi c(sir);
 		c.DeterminareComanda();
-		c.DisplayTable();
-	
-		cout << "Tastati 1 pt a iesi sau 0 pt a continua "<<endl;
-		cin >> var_exit;
+		
+		if (c.getCom() == "EXIT" || c.getCom() == "Exit" || c.getCom() == "exit")
+		{
+			var_exit = c.Exit();
+		}
 	}
 	//cout << sir;
 	//sir = "CREATE TABLE comenzi ( nume , text , 30 , NULL , varsta , integer , 10 , NULL )"; 
