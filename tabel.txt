@@ -1,0 +1,4 @@
+comenzi
+nume
+varsta
+
