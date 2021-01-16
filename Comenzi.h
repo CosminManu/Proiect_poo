@@ -22,11 +22,13 @@ public:
 	vector <string> vector_col;
 
 	Comenzi(string comanda);
-	bool DeterminareComanda();
+	Comenzi(string comanda, int cod);
+
+	void DeterminareComanda();
 
 	Tabela* getTab();
 
-	void CreateTable(string x, vector<string> vector_col);
+	void CreateTable();
 
 	void insertCol(vector<string> nume_coloana, string Tip, int dimensiune, string valoare_implicita);
 
@@ -38,5 +40,8 @@ public:
 	void Update();
 	void Insert();
 	void Delete();
+	int Exit();
 	friend class Tabela;
+	
+	string getCom();
 };
