@@ -1,4 +1,5 @@
 #include "Comenzi.h"
+#include <fstream>
 
 using namespace std;
 
@@ -6,9 +7,15 @@ Comenzi::Comenzi(string comanda)
 {
 	this->comanda = comanda;
 }
-
-bool Comenzi::DeterminareComanda()
+Comenzi::Comenzi(string comanda, int cod)
 {
+	this->comanda = comanda;
+	this->cod = cod;
+}
+
+void Comenzi::DeterminareComanda()
+{
+	string nume;
 	string delimiter = " ";
 	size_t pos = 0;
 	string token;
@@ -17,78 +24,113 @@ bool Comenzi::DeterminareComanda()
 		com.push_back(token);
 		comanda.erase(0, pos + delimiter.length());
 	}
+
 	com.push_back(comanda);
 
-	string nume = com.at(2);
+	if (com.size() == 1)
+	{
+		nume = com.at(0);
+	}
+	else nume = com.at(2);	
+
 	if (this->com.at(0) == "CREATE")
 	{
 		if (this->com.at(1) == "TABLE")
 		{
-			int i = 0, t = 0;
 			
-			for (string s : com)
-			{
-				if (s == ")")
-				{
-					i = 0;
-				}
-				if (i != 0)
-				{
-					t++;
-							
-					if (t % 8 == 1)					 
-					{
-						vector_col.push_back(s);		
-					}
-				}
-				if (s == "(") {
-					i = 1;
-				}
-			}
-			cout << endl;
-			cout << "Tabela " << com.at(2) << " a fost creata" << endl;
-			//CreateTable(com.at(2), vector_col);
+			CreateTable();
 			
 		}
-		if (vector_col.size() != 0)		// daca ai coloane
-		{
-			return 1;
-		}
-		else return 0;
 	}
 	if (this->com.at(0) == "DISPLAY")
 	{
 		if (this->com.at(1) == "TABLE")
 		{
-			if(this->com.at(2) == nume)
 			DisplayTable();
+			
 		}
 	}
-	
-}
 
-Tabela* Comenzi::getTab()
-{
-	return tab;
-}
-
-void Comenzi::CreateTable(string x, vector<string> vector_col)
-{
-	/*tab->nr_tabela++;
-	tab = new Tabela[tab->nr_tabela];
-	for (int i = 0; i < tab->nr_tabela; i++) 
+	if (this->com.at(0) == "DROP")
 	{
+		if (this->com.at(1) == "TABLE")
+		{
+			DropTable();
 
-		tab[i] = Tabela(x,vector_col,vector_col.size());
-		tab->nr_tabela-=2;
+		}
 	}
-	tab[tab->nr_tabela - 1].id_tabela = tab->nr_tabela - 1;
-	tab[tab->nr_tabela - 1].nr_coloane = vector_col.size();
-	tab[tab->nr_tabela - 1].nume_tabel = x;
-	tab[tab->nr_tabela - 1].vector_coloane = vector_col;
+	if (this->com.at(0) == "EXIT" || this->com.at(0) == "exit" || this->com.at(0) == "Exit")
+	{
+		Exit();
+	}
+}
 
-	tab[tab->nr_tabela - 1] = Tabela(x, vector_col, vector_col.size());*/		
-														
+int Comenzi::Exit()
+{
+	int x = 1;
+	return x;
+}
+string Comenzi::getCom()
+{
+	return com.at(0);
+}
+
+void Comenzi::DropTable()
+{
+	int ok = 0;
+	string line;
+	string line1;
+	fstream fisier("tabel.txt");
+	if (fisier.is_open())
+	{
+		while (getline(fisier, line))
+		{
+			line.replace(line.find(line), line.length(), "");
+			fisier << line;
+
+		}
+		cout << "	Tabela " << com.at(2) << " a fost stearsa" << endl;
+
+		fisier.close();
+	}
+}
+
+
+void Comenzi::CreateTable()
+{
+	ofstream fisier;
+	int i = 0, t = 0;
+
+	for (string s : com)
+	{
+		if (s == ")")
+		{
+			i = 0;
+		}
+		if (i != 0)
+		{
+			t++;
+
+			if (t % 8 == 1)
+			{
+				vector_col.push_back(s);
+			}
+		}
+		if (s == "(") {
+			i = 1;
+		}
+	}
+	fisier.open("tabel.txt");
+	fisier << com.at(2) << endl;
+	for (int i = 0; i < vector_col.size(); i++)
+	{
+		fisier << vector_col[i] << endl;
+
+	}
+	fisier.close();
+	cout << endl;
+	cout << "Tabela " << com.at(2) << " a fost creata" << endl;
+					
 }
 
 void Comenzi::insertCol(vector<string> nume_coloana, string Tip, int dimensiune, string valoare_implicita)
@@ -100,24 +142,47 @@ void Comenzi::insertCol(vector<string> nume_coloana, string Tip, int dimensiune,
 	}*/
 }
 
-void Comenzi::DropTable()
+void Comenzi::DisplayTable()			// DISPLAY TABLE comenzi
 {
-	if (tab->nr_tabela > 0)
+	cout << endl;
+
+	//for (int i = 0; i < vector_col.size(); i++)
+	//{
+	//	cout <<"  " <<vector_col[i] << "		";
+	//}
+
+	int ok = 0;
+	string line;
+	string line1;
+	ifstream fisier("tabel.txt");
+	if (fisier.is_open())
 	{
-		delete[] tab;
-		tab->nr_tabela--;
+		while (getline(fisier, line))
+		{
+			ok++;
+			if (com.at(2) == line1)
+			{
+				cout << "	" << line << "		";
+			}
+
+			if (ok == 1 && com.at(2) == line)
+			{
+				cout << "	Tabela " << com.at(2) << endl;
+				line1 = line;
+			}
+		}
+
+		fisier.close();
 	}
+	else cout << "Nu s a putut deschide fisierul" << endl;
+	cout << endl;
 }
 
-void Comenzi::DisplayTable()
+
+
+Tabela* Comenzi::getTab()
 {
-	cout << endl;
-	cout << "	Tabela " << com.at(2) <<endl;
-	for (int i = 0; i < vector_col.size(); i++)
-	{
-		cout <<"  " <<vector_col[i] << "		";
-	}
-	cout << endl;
+	return tab;
 }
 
 void Comenzi::Select()
