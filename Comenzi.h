@@ -21,6 +21,7 @@ private:
 public:
 	vector <string> vector_col;
 	vector <string> vector_coloane;
+	vector<string> vector_sel;
 
 	Comenzi(string comanda);
 	Comenzi(string comanda, int cod);
