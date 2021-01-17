@@ -38,8 +38,14 @@ int main()
 		<< "CREATE TABLE comenzi ( nume , text , 30 , NULL , varsta , integer , 10 , NULL ) \n" 
 		<< "CREATE TABLE abc ( litera , text , 30 , NULL , cifra , integer , 10 , NULL )\n"
 		<<"DISPLAY TABLE comenzi \n" 
+		<<"DISPLAY TABLE abc \n"
 		<<"DROP TABLE comenzi \n"
-		<<"INSERT INTO comenzi VALUES ( Ana , 20 )"
+		<<"DROP TABLE abc \n"
+		<<"INSERT INTO comenzi VALUES ( Denisa , 20 ) \n"
+		<<"INSERT INTO comenzi VALUES ( Cosmin , 20 ) \n"
+		<<"INSERT INTO comenzi VALUES ( Stefan , 22 ) \n"
+		<<"INSERT INTO abc VALUES ( M , 31 ) \n"
+		<<"SELECT nume , varsta FROM comenzi \n"
 		<<endl;
 
 	int var_exit = 0;
@@ -57,5 +63,4 @@ int main()
 			var_exit = c.Exit();
 		}
 	}
-	_getch();
 }
