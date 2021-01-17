@@ -20,6 +20,7 @@ private:
 	vector<string> com;
 public:
 	vector <string> vector_col;
+	vector <string> vector_coloane;
 
 	Comenzi(string comanda);
 	Comenzi(string comanda, int cod);
